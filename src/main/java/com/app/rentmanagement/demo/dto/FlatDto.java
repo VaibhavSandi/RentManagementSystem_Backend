@@ -5,21 +5,14 @@ package com.app.rentmanagement.demo.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
-public class RenterDto {
-    private Long renterId;
-    private String renterName;
-    private String mobileNumber;
-    private String idProofNo;
-
+public class FlatDto {
     private Long flatId;
     private String flatNo;
-
-    private LocalDate joiningDate;
+    private String buildingName;
     private BigDecimal monthlyRent;
-    private BigDecimal depositPaid;
+    private BigDecimal depositAmount;
     private String status;
 }
