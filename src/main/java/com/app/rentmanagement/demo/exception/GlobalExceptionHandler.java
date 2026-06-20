@@ -25,6 +25,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FlatDeleteException.class)
+    public ResponseEntity<String> handleFlatDeleteException(
+            FlatDeleteException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
     @ExceptionHandler(DuplicateRecordException.class)
     public ResponseEntity<ErrorResponseDto> handleDuplicate(
             DuplicateRecordException ex,

@@ -41,7 +41,7 @@ public class FlatController {
         description = "Http Status Created"
 )
 @PostMapping("/FillFlat")
-    private ResponseEntity addFlatDetails(@Valid@RequestBody FlatDto flat)
+    private ResponseEntity addFlatDetails(@RequestBody FlatDto flat)
     {
         FlatDto savedflat=flatService.createFlat(flat);
 
@@ -70,7 +70,7 @@ public class FlatController {
     )
 
 
-    @GetMapping("/getFlat/{flatId")
+    @GetMapping("/getFlat/{flatId}")
     public ResponseEntity<FlatDto> getFlatById(@PathVariable  long flatId)
     {
         return ResponseEntity.ok(flatService.getFlatById(flatId));
@@ -97,7 +97,7 @@ public class FlatController {
             responseCode = "500",
             description = "HTTP Status INTERNAL_SERVER_ERROR"
     )
-@GetMapping
+@GetMapping("/getFlatsDetails")
 public ResponseEntity<List<FlatDto>> getAllFlatDetails() {
     return ResponseEntity.ok(
             flatService.getAllFlats());

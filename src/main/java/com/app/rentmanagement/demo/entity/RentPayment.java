@@ -29,17 +29,23 @@ public class RentPayment extends BaseEntity {
     @JoinColumn(name = "flat_id")
     private Flat flat;
 
+    @Column(name = "rent_month", nullable = false)
     private Integer rentMonth;
 
+    @Column(name = "rent_year", nullable = false)
     private Integer rentYear;
 
+    @Column(name = "monthly_rent", nullable = false, precision = 10, scale = 2)
     private BigDecimal monthlyRent;
 
+    @Column(name = "amount_paid", nullable = false, precision = 10, scale = 2)
     private BigDecimal amountPaid;
 
+    @Column(name = "payment_mode", length = 50)
     private String paymentMode;
 
     private String remark;
 
+    @Column(name = "payment_date")
     private LocalDateTime paymentDate;
 }

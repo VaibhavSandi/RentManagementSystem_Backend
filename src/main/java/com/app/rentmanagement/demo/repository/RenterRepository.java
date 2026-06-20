@@ -12,4 +12,6 @@ public interface RenterRepository extends JpaRepository<Renter,Long> {
     List<Renter> findByRenterNameContainingIgnoreCase(String renterName);
 
     List<Renter> findByMobileNumber(String mobileNumber);
+
+    boolean existsByFlat_FlatId(Long flatId);
 }
