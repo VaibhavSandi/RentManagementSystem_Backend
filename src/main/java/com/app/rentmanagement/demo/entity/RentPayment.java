@@ -43,9 +43,14 @@ public class RentPayment extends BaseEntity {
     private BigDecimal amountPaid;
 
 
-@Column(name = "pending_amount")
+@Column(
+    name = "pending_amount",
+    precision = 10,
+    scale = 2,
+    insertable = false,
+    updatable = false
+)
 private BigDecimal pendingAmount;
-
     @Column(name = "payment_mode", length = 50)
     private String paymentMode;
 

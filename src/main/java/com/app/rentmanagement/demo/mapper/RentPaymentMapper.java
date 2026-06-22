@@ -29,7 +29,7 @@ public class RentPaymentMapper {
                 .rentYear(payment.getRentYear())
                 .monthlyRent(payment.getMonthlyRent())
                 .amountPaid(payment.getAmountPaid())
-                .pendingAmount(pendingAmount)
+              //   .pendingAmount(pendingAmount)
                 .paymentMode(payment.getPaymentMode())
                 .remark(payment.getRemark())
                 .paymentDate(payment.getPaymentDate())
