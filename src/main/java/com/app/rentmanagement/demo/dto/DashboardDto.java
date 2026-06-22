@@ -3,6 +3,7 @@ package com.app.rentmanagement.demo.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +25,11 @@ public class DashboardDto {
     private BigDecimal collectedAmount;
 
     private BigDecimal pendingAmount;
+
+    private Long totalRenters;
+      private DashboardDto stats;
+
+    private List<RentPaymentDto> recentPayments;
+
+    private List<PendingRentDto> pendingRents;
 }

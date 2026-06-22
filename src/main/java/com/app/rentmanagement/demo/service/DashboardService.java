@@ -1,4 +1,8 @@
 package com.app.rentmanagement.demo.service;
 
-public class DashboardService {
+import com.app.rentmanagement.demo.dto.DashboardDto;
+
+public interface DashboardService {
+
+    public DashboardDto getDashboardData();
 }

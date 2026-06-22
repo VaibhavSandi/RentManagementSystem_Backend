@@ -19,4 +19,6 @@ public interface RenterService {
     RenterDto updateRenter(Long renterId, RenterDto renterDto);
 
     void deleteRenter(Long renterId);
+
+    List<RenterDto> getAllActivateRenters();
 }

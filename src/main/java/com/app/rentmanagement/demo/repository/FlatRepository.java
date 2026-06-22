@@ -11,4 +11,8 @@ public interface FlatRepository  extends JpaRepository<Flat,Long> {
 
     boolean existsByFlatNo(String flatNo);
 
+
+    Long countByStatus(String status);
+
+
 }

@@ -147,4 +147,10 @@ public class RenterController {
         renterService.deleteRenter(renterId);
         return ResponseEntity.ok("Renter deleted successfully");
     }
+
+
+    @GetMapping("/activerenters")
+    public ResponseEntity<?>getAllActivateRenters() {
+        return ResponseEntity.ok(renterService.getAllActivateRenters());
+    }
 }

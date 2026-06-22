@@ -13,8 +13,11 @@ import com.app.rentmanagement.demo.repository.RentPaymentRepository;
 import com.app.rentmanagement.demo.repository.RenterRepository;
 import com.app.rentmanagement.demo.service.RentPaymentService;
 import lombok.RequiredArgsConstructor;
+
+import org.hibernate.grammars.hql.HqlParser.LocalDateTimeContext;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,7 +49,7 @@ public class RentPaymentServiceImpl implements RentPaymentService {
                 });
 
         if (paymentDto.getPaymentDate() == null) {
-            paymentDto.setPaymentDate(LocalDateTime.now());
+            paymentDto.setPaymentDate(LocalDate.now());
         }
 
         RentPayment payment = RentPaymentMapper.toEntity(paymentDto, renter, flat);

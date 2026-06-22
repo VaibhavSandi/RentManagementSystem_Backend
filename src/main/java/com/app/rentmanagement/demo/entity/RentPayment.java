@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,11 +42,17 @@ public class RentPayment extends BaseEntity {
     @Column(name = "amount_paid", nullable = false, precision = 10, scale = 2)
     private BigDecimal amountPaid;
 
+
+@Column(name = "pending_amount")
+private BigDecimal pendingAmount;
+
     @Column(name = "payment_mode", length = 50)
     private String paymentMode;
 
     private String remark;
 
     @Column(name = "payment_date")
-    private LocalDateTime paymentDate;
+    private LocalDate  paymentDate;
+
+   
 }

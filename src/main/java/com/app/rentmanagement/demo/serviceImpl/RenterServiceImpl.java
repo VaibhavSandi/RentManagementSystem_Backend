@@ -9,6 +9,7 @@ import com.app.rentmanagement.demo.entity.Renter;
 import com.app.rentmanagement.demo.exception.ResourceNotFoundException;
 import com.app.rentmanagement.demo.mapper.RenterMapper;
 import com.app.rentmanagement.demo.repository.FlatRepository;
+import com.app.rentmanagement.demo.repository.RentPaymentRepository;
 import com.app.rentmanagement.demo.repository.RenterRepository;
 import com.app.rentmanagement.demo.service.RenterService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,9 @@ public class RenterServiceImpl implements RenterService {
 
     private final RenterRepository renterRepository;
     private final FlatRepository flatRepository;
+
+
+    private final RentPaymentRepository rentPaymentRepository;
 
     @Override
     public RenterDto createRenter(RenterDto renterDto) {
@@ -82,6 +86,26 @@ public class RenterServiceImpl implements RenterService {
         Renter renter = renterRepository.findById(renterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Renter", "renterId", renterId));
 
+
+                Flat flat = flatRepository.findById(renter.getFlat().getFlatId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Flat", "flatId", renter.getFlat().getFlatId()));
+
+
+
+                        flat.setStatus("Vacant");
+                        flatRepository.save(flat);
+
+                rentPaymentRepository.deleteByRenterId(renterId);
+
+
+
+
         renterRepository.delete(renter);
+    }
+
+    @Override
+    public List<RenterDto> getAllActivateRenters() {
+            // TODO Auto-generated method stub
+            return renterRepository.findActivateRentersByStatus("Active").stream().map(RenterMapper::toDto).toList();
     }
 }
