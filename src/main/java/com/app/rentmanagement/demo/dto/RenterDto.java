@@ -18,6 +18,13 @@ public class RenterDto {
     private Long flatId;
     private String flatNo;
 
+    
+    private Long parkingId;
+
+    private Integer parkingNumber;
+
+    private boolean isOccupied;
+
     private LocalDate joiningDate;
     private BigDecimal monthlyRent;
     private BigDecimal depositPaid;

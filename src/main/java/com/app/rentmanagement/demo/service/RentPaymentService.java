@@ -2,6 +2,7 @@ package com.app.rentmanagement.demo.service;
 
 import com.app.rentmanagement.demo.dto.RentPaymentDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface RentPaymentService {
@@ -18,4 +19,14 @@ public interface RentPaymentService {
     RentPaymentDto updatePayment(Long paymentId, RentPaymentDto paymentDto);
 
     void deletePayment(Long paymentId);
+
+
+      List<RentPaymentDto> getCurrentMonthPayments();
+
+  List<RentPaymentDto> filterRentPayments(
+        Long renterId,
+        LocalDate fromDate,
+        LocalDate toDate
+);
 }
+

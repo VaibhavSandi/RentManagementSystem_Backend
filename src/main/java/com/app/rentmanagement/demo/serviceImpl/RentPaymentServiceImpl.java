@@ -125,4 +125,35 @@ public class RentPaymentServiceImpl implements RentPaymentService {
 
         rentPaymentRepository.delete(payment);
     }
+
+    @Override
+    public List<RentPaymentDto> getCurrentMonthPayments() {
+        LocalDate currentDate = LocalDate.now();
+        Integer currentMonth = currentDate.getMonthValue(); 
+        Integer currentYear = currentDate.getYear();
+
+        return rentPaymentRepository.findByRentMonthAndRentYear(currentMonth, currentYear)
+                .stream()
+                .map(RentPaymentMapper::toDto)
+                .toList();
+       
+    }
+
+    @Override
+    public List<RentPaymentDto> filterRentPayments(Long renterId, LocalDate fromDate, LocalDate toDate) {
+
+
+        LocalDateTime startDateTime=null;
+        LocalDateTime endDateTime=null;
+
+   
+
+        return rentPaymentRepository.filterPayments(renterId, startDateTime, endDateTime)
+                .stream()
+                .map(RentPaymentMapper::toDto)
+                .toList();
+
+    }
+
+
 }

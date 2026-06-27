@@ -12,6 +12,7 @@ import com.app.rentmanagement.demo.repository.RentPaymentRepository;
 import com.app.rentmanagement.demo.repository.RenterRepository;
 import com.app.rentmanagement.demo.service.DashboardService;
 import com.app.rentmanagement.demo.service.PendingRentService;
+import com.app.rentmanagement.demo.repository.ExpenseRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final RenterRepository renterRepository;
     private final RentPaymentRepository rentPaymentRepository;
     private final PendingRentService pendingRentService;
+    private final ExpenseRepository expenseRepository;
 
 
     public DashboardDto getDashboardData(){
@@ -39,6 +41,13 @@ public class DashboardServiceImpl implements DashboardService {
 
       BigDecimal  PendingAmount=rentPaymentRepository.getCurrentMonthPendingAmount(currentMonth, currentYear);
 
+      LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
+      LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+      BigDecimal totalExpenses = expenseRepository.sumExpensesBetweenDates(startDate, endDate);
+      if (totalExpenses == null) {
+          totalExpenses = BigDecimal.ZERO;
+      }
+
 
       DashboardDto stats=DashboardDto.builder()
               .totalFlats(flatRepository.count())
@@ -47,9 +56,10 @@ public class DashboardServiceImpl implements DashboardService {
               .totalRenters(renterRepository.count())
               .activeRenters(renterRepository.countByStatus("Active"))
              // .inactiveRenters(renterRepository.countByStatus("Inactive"))
-                .currentMonthRent(renterRepository.getCurrentMonthRent())
+              .currentMonthRent(renterRepository.getCurrentMonthRent())
               .collectedAmount(collectedAmount)
               .pendingAmount(PendingAmount)
+              .totalExpenses(totalExpenses)
               .build();
 
 

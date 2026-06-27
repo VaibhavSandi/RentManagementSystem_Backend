@@ -153,4 +153,16 @@ public class RenterController {
     public ResponseEntity<?>getAllActivateRenters() {
         return ResponseEntity.ok(renterService.getAllActivateRenters());
     }
+
+    @GetMapping("/{id}/revisions")
+    public ResponseEntity<java.util.List<com.app.rentmanagement.demo.dto.RentRevisionDto>> getRentRevisions(@PathVariable("id") Long renterId) {
+        return ResponseEntity.ok(renterService.getRentRevisions(renterId));
+    }
+
+    @PostMapping("/{id}/revisions")
+    public ResponseEntity<com.app.rentmanagement.demo.dto.RentRevisionDto> addRentRevision(
+            @PathVariable("id") Long renterId, 
+            @RequestBody com.app.rentmanagement.demo.dto.RentRevisionDto dto) {
+        return new ResponseEntity<>(renterService.addRentRevision(renterId, dto), HttpStatus.CREATED);
+    }
 }

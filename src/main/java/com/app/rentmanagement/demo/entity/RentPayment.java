@@ -30,6 +30,8 @@ public class RentPayment extends BaseEntity {
     @JoinColumn(name = "flat_id")
     private Flat flat;
 
+    
+
     @Column(name = "rent_month", nullable = false)
     private Integer rentMonth;
 

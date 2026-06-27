@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,8 +84,22 @@ void deleteByRenterId(@Param("renterId") Long renterId);
     );
 
     List<RentPayment> findByPendingAmountGreaterThan(BigDecimal amount);
+//     List<RentPayment> findByRentMonthAndRentYear(Integer rentMonth, Integer rentYear);
 
 
+List<RentPayment> findByRenterRenterIdOrderByPaymentDateAsc(Long renterId);
 
+   @Query("""
+        SELECT rp FROM RentPayment rp
+        WHERE (:renterId IS NULL OR rp.renter.renterId = :renterId)
+          AND (:fromDate IS NULL OR rp.paymentDate >= :fromDate)
+          AND (:toDate IS NULL OR rp.paymentDate <= :toDate)
+        ORDER BY rp.paymentDate DESC
+    """)
+    List<RentPayment> filterPayments(
+            @Param("renterId") Long renterId,
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
     
 }

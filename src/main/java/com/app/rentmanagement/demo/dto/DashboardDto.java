@@ -26,6 +26,8 @@ public class DashboardDto {
 
     private BigDecimal pendingAmount;
 
+    private BigDecimal totalExpenses;
+
     private Long totalRenters;
       private DashboardDto stats;
 
