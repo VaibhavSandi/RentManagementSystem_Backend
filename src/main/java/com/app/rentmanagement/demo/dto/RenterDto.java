@@ -17,6 +17,7 @@ public class RenterDto {
 
     private Long flatId;
     private String flatNo;
+    private String meterNo;
 
     
     private Long parkingId;

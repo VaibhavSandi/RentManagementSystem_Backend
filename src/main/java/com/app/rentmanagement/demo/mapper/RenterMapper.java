@@ -18,6 +18,7 @@ public class RenterMapper {
                 .idProofNo(renter.getIdProofNo())
                 .flatId(renter.getFlat() != null ? renter.getFlat().getFlatId() : null)
                 .flatNo(renter.getFlat() != null ? renter.getFlat().getFlatNo() : null)
+                .meterNo(renter.getFlat() != null ? renter.getFlat().getMeterNo() : null)
                 .joiningDate(renter.getJoiningDate())
                 .monthlyRent(renter.getMonthlyRent())
                 .depositPaid(renter.getDepositPaid())

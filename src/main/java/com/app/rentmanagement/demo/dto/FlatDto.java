@@ -12,6 +12,7 @@ public class FlatDto {
     private Long flatId;
     private String flatNo;
     private String buildingName;
+    private String meterNo;
     private BigDecimal monthlyRent;
     private BigDecimal depositAmount;
     private String status;

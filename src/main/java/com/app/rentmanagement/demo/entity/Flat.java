@@ -34,6 +34,9 @@ public class Flat extends BaseEntity {
     @Column(name = "building_name")
     private String buildingName;
 
+    @Column(name = "meter_no")
+    private String meterNo;
+
     @Column(name = "monthly_rent", nullable = false)
     private BigDecimal monthlyRent;
 
