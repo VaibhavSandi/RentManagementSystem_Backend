@@ -42,6 +42,11 @@ public RenterDto createRenter(RenterDto renterDto) {
             .orElseThrow(() -> new ResourceNotFoundException(
                     "Flat", "flatId", renterDto.getFlatId()));
 
+    if (renterDto.getMeterNo() != null && !renterDto.getMeterNo().trim().isEmpty()) {
+        flat.setMeterNo(renterDto.getMeterNo());
+        flatRepository.save(flat);
+    }
+
     ParkingDetails parkingDetails = null;
 
     System.out.println("parking id"+renterDto.getParkingId());
@@ -104,6 +109,11 @@ public RenterDto updateRenter(Long renterId, RenterDto renterDto) {
             .orElseThrow(() -> new ResourceNotFoundException(
                     "Flat", "flatId", renterDto.getFlatId()));
 
+    if (renterDto.getMeterNo() != null && !renterDto.getMeterNo().trim().isEmpty()) {
+        flat.setMeterNo(renterDto.getMeterNo());
+        flatRepository.save(flat);
+    }
+
     // old parking free
     if (renter.getParkingDetails() != null) {
         ParkingDetails oldParking = renter.getParkingDetails();
@@ -156,6 +166,7 @@ public RenterDto updateRenter(Long renterId, RenterDto renterDto) {
 }
 
   @Override
+@Transactional
 public void deleteRenter(Long renterId) {
 
     Renter renter = renterRepository.findById(renterId)
@@ -174,12 +185,18 @@ public void deleteRenter(Long renterId) {
     }
 
     if (renter.getFlat() != null) {
+
         Flat flat = renter.getFlat();
+
         flat.setStatus("Vacant");
+
         flatRepository.save(flat);
     }
 
     rentPaymentRepository.deleteByRenterId(renterId);
+
+    // Delete revision records first
+    rentRevisionRepository.deleteByRenterId(renterId);
 
     renterRepository.delete(renter);
 }

@@ -52,6 +52,7 @@ public class FlatServiceImpl implements FlatService {
 
         flat.setFlatNo(flatDto.getFlatNo());
         flat.setBuildingName(flatDto.getBuildingName());
+        flat.setMeterNo(flatDto.getMeterNo());
         flat.setMonthlyRent(flatDto.getMonthlyRent());
         flat.setDepositAmount(flatDto.getDepositAmount());
         flat.setStatus(flatDto.getStatus());
