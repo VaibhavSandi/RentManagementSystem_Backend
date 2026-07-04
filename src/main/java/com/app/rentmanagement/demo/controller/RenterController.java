@@ -165,4 +165,10 @@ public class RenterController {
             @RequestBody com.app.rentmanagement.demo.dto.RentRevisionDto dto) {
         return new ResponseEntity<>(renterService.addRentRevision(renterId, dto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}/revisions/{revisionId}")
+    public ResponseEntity<String> deleteRentRevision(@PathVariable("id") Long renterId, @PathVariable("revisionId") Long revisionId) {
+        renterService.deleteRentRevision(revisionId);
+        return ResponseEntity.ok("Revision deleted successfully");
+    }
 }

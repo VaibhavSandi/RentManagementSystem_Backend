@@ -26,12 +26,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FlatDeleteException.class)
-    public ResponseEntity<String> handleFlatDeleteException(
-            FlatDeleteException ex) {
+    public ResponseEntity<ErrorResponseDto> handleFlatDeleteException(
+            FlatDeleteException ex,
+            HttpServletRequest request) {
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+        ErrorResponseDto error = ErrorResponseDto.builder()
+                .apiPath(request.getRequestURI())
+                .errorCode(HttpStatus.BAD_REQUEST.toString())
+                .errorMessage(ex.getMessage())
+                .errorTime(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateRecordException.class)

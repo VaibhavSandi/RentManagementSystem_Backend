@@ -31,7 +31,7 @@ public class DashboardServiceImpl implements DashboardService {
     public DashboardDto getDashboardData(){
 
 
-        LocalDate today=LocalDate.now();
+        LocalDate today=LocalDate.now().minusMonths(1);
 
         Integer currentMonth=today.getMonthValue();
         Integer currentYear=today.getYear();

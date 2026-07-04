@@ -26,4 +26,6 @@ public interface RenterService {
     List<RentRevisionDto> getRentRevisions(Long renterId);
 
     RentRevisionDto addRentRevision(Long renterId, RentRevisionDto dto);
+
+    void deleteRentRevision(Long revisionId);
 }

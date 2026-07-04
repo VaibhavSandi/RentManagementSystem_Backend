@@ -228,4 +228,9 @@ public void deleteRenter(Long renterId) {
         RentRevision saved = rentRevisionRepository.save(revision);
         return com.app.rentmanagement.demo.mapper.RentRevisionMapper.toDto(saved);
     }
+
+    @Override
+    public void deleteRentRevision(Long revisionId) {
+        rentRevisionRepository.deleteById(revisionId);
+    }
 }
