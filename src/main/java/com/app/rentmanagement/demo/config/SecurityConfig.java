@@ -35,7 +35,7 @@ public class SecurityConfig {
                 "http://10.*.*.*:*",
                 "http://172.16.*.*:*",
                 "https://*.trycloudflare.com",
-             "https://your-app.netlify.app"
+             "https://*.netlify.app"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
