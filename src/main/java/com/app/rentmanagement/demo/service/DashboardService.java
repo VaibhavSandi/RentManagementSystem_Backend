@@ -2,7 +2,10 @@ package com.app.rentmanagement.demo.service;
 
 import com.app.rentmanagement.demo.dto.DashboardDto;
 
+import java.time.YearMonth;
+
 public interface DashboardService {
 
-    public DashboardDto getDashboardData();
+    /** @param rentMonth period for the period figures; null = latest due rent month */
+    public DashboardDto getDashboardData(YearMonth rentMonth);
 }

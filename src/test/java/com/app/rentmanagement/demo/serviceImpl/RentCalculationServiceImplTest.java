@@ -216,6 +216,112 @@ class RentCalculationServiceImplTest {
         assertThat(service.getPendingRenters(SEP).get(0).getPendingMonths()).hasSize(1);
     }
 
+    // ── Pending Rent Report (per-renter summary) ───────────────────
+
+    @Test
+    void report_threeUnpaidMonths() {
+        Renter amit = renter("Amit", "2026-07-01", 8000, null);
+        pay(amit, YearMonth.of(2026, 7), 8000, "2026-08-02");
+
+        // In November the latest due rent month is October
+        RenterPendingSummaryDto summary = service.getPendingRenters(OCT).get(0);
+
+        assertThat(months(summary)).containsExactly("2026-08", "2026-09", "2026-10");
+        assertThat(summary.getPendingMonthCount()).isEqualTo(3);
+        assertThat(summary.getTotalPending()).isEqualByComparingTo("24000");
+        assertThat(summary.getMonthlyRent()).isEqualByComparingTo("8000");
+    }
+
+    @Test
+    void report_paidMonthBetweenUnpaidMonthsIsExcluded() {
+        Renter r = renter("Gap", "2026-08-01", 8000, null);
+        pay(r, SEP, 8000, "2026-10-01");
+
+        RenterPendingSummaryDto summary = service.getPendingRenters(OCT).get(0);
+
+        assertThat(months(summary)).containsExactly("2026-08", "2026-10");
+        assertThat(summary.getPendingMonthCount()).isEqualTo(2);
+        assertThat(summary.getTotalPending()).isEqualByComparingTo("16000");
+    }
+
+    @Test
+    void report_monthsAcrossTwoYearsKeepTheirYear() {
+        renter("Year end", "2025-11-01", 7000, null);
+
+        RenterPendingSummaryDto summary = service.getPendingRenters(YearMonth.of(2026, 2)).get(0);
+
+        assertThat(months(summary)).containsExactly("2025-11", "2025-12", "2026-01", "2026-02");
+        assertThat(summary.getPendingMonths()).extracting(RentMonthStatusDto::getRentPeriod)
+                .containsExactly("November 2025", "December 2025", "January 2026", "February 2026");
+        assertThat(summary.getTotalPending()).isEqualByComparingTo("28000");
+    }
+
+    @Test
+    void report_partialMonthCountsOnlyTheBalance() {
+        Renter r = renter("Partial", "2026-08-01", 8000, null);
+        pay(r, AUG, 8000, "2026-09-01");
+        pay(r, SEP, 5000, "2026-10-01");
+
+        RenterPendingSummaryDto summary = service.getPendingRenters(SEP).get(0);
+
+        assertThat(summary.getPendingMonthCount()).isEqualTo(1);
+        assertThat(summary.getTotalPending()).isEqualByComparingTo("3000");
+    }
+
+    @Test
+    void report_multipleRenters_noDuplicatesAndFullyPaidExcluded() {
+        Renter a = renter("A", "2026-08-01", 8000, null);
+        renter("B", "2026-09-01", 7000, null);
+        Renter paid = renter("Paid", "2026-09-01", 9000, null);
+        pay(paid, SEP, 9000, "2026-10-01");
+        pay(a, AUG, 4000, "2026-09-01");
+        pay(a, AUG, 4000, "2026-09-05"); // split payment, still one month
+
+        List<RenterPendingSummaryDto> report = service.getPendingRenters(SEP);
+
+        assertThat(report).extracting(RenterPendingSummaryDto::getRenterName).containsExactly("A", "B");
+        assertThat(months(report.get(0))).containsExactly("2026-09");
+        assertThat(months(report.get(1))).containsExactly("2026-09");
+        assertThat(report.stream().map(RenterPendingSummaryDto::getTotalPending).reduce(BigDecimal.ZERO, BigDecimal::add))
+                .isEqualByComparingTo("15000");
+    }
+
+    @Test
+    void report_emptyWhenEveryoneHasPaid() {
+        Renter r = renter("Paid", "2026-09-01", 9000, null);
+        pay(r, SEP, 9000, "2026-10-01");
+
+        assertThat(service.getPendingRenters(SEP)).isEmpty();
+    }
+
+    @Test
+    void monthlyTotals_matchPerMonthRows() {
+        Renter a = renter("A", "2026-08-01", 8000, null);
+        Renter b = renter("B", "2026-09-01", 7000, null);
+        pay(a, AUG, 8000, "2026-09-02");
+        pay(a, SEP, 5000, "2026-10-02");
+        pay(b, SEP, 7000, "2026-10-03");
+
+        List<com.app.rentmanagement.demo.dto.MonthlyRentTotalsDto> totals = service.getMonthlyTotals(YearMonth.of(2026, 7), SEP);
+
+        assertThat(totals).hasSize(3);
+        // July: nobody had joined yet
+        assertThat(totals.get(0).getExpectedRent()).isEqualByComparingTo("0");
+        assertThat(totals.get(1).getExpectedRent()).isEqualByComparingTo("8000");
+        assertThat(totals.get(1).getPendingRent()).isEqualByComparingTo("0");
+        assertThat(totals.get(2).getRentPeriod()).isEqualTo("September 2026");
+        assertThat(totals.get(2).getExpectedRent()).isEqualByComparingTo("15000");
+        assertThat(totals.get(2).getCollectedRent()).isEqualByComparingTo("12000");
+        assertThat(totals.get(2).getPendingRent()).isEqualByComparingTo("3000");
+        assertThat(totals.get(2).getRenterCount()).isEqualTo(2);
+    }
+
+    private static List<String> months(RenterPendingSummaryDto summary) {
+        return summary.getPendingMonths().stream()
+                .map(m -> YearMonth.of(m.getRentYear(), m.getRentMonth()).toString())
+                .toList();
+    }
+
     // ── helpers ────────────────────────────────────────────────────
 
     private Renter renter(String name, String joiningDate, int rent, String email) {

@@ -1,5 +1,6 @@
 package com.app.rentmanagement.demo.service;
 
+import com.app.rentmanagement.demo.dto.MonthlyRentTotalsDto;
 import com.app.rentmanagement.demo.dto.RentMonthStatusDto;
 import com.app.rentmanagement.demo.dto.RenterPendingSummaryDto;
 
@@ -21,6 +22,9 @@ public interface RentCalculationService {
 
     /** Every renter who owes rent for, or has paid towards, the given rent month. */
     List<RentMonthStatusDto> getRentersByMonth(YearMonth rentMonth);
+
+    /** Expected / collected / pending totals per rent month, from..to inclusive, oldest first. */
+    List<MonthlyRentTotalsDto> getMonthlyTotals(YearMonth from, YearMonth to);
 
     /** Renters with pending rent up to and including asOfRentMonth, month-wise. */
     List<RenterPendingSummaryDto> getPendingRenters(YearMonth asOfRentMonth);

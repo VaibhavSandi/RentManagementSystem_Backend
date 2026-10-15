@@ -26,6 +26,9 @@ public class RenterPendingSummaryDto {
     // Only months with pendingAmount > 0, oldest first
     private List<RentMonthStatusDto> pendingMonths;
 
+    // Number of rent months with pendingAmount > 0
+    private int pendingMonthCount;
+
     private BigDecimal totalPending;
 
     // Total excess paid across months (shown separately, not netted off)

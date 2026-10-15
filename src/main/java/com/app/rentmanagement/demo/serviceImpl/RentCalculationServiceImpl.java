@@ -1,5 +1,6 @@
 package com.app.rentmanagement.demo.serviceImpl;
 
+import com.app.rentmanagement.demo.dto.MonthlyRentTotalsDto;
 import com.app.rentmanagement.demo.dto.RentMonthStatusDto;
 import com.app.rentmanagement.demo.dto.RenterPendingSummaryDto;
 import com.app.rentmanagement.demo.entity.RentPayment;
@@ -80,6 +81,35 @@ public class RentCalculationServiceImpl implements RentCalculationService {
     }
 
     @Override
+    public List<MonthlyRentTotalsDto> getMonthlyTotals(YearMonth from, YearMonth to) {
+        LedgerData data = loadLedgerData();
+
+        // Same rows as getRentersByMonth, for every month of the range in one pass
+        Map<YearMonth, List<RentMonthStatusDto>> rowsByMonth = new HashMap<>();
+        for (Renter renter : data.renters()) {
+            for (RentMonthStatusDto row : buildLedger(renter, data, from, to)) {
+                rowsByMonth.computeIfAbsent(YearMonth.of(row.getRentYear(), row.getRentMonth()), ym -> new ArrayList<>())
+                        .add(row);
+            }
+        }
+
+        List<MonthlyRentTotalsDto> totals = new ArrayList<>();
+        for (YearMonth ym = from; !ym.isAfter(to); ym = ym.plusMonths(1)) {
+            List<RentMonthStatusDto> rows = rowsByMonth.getOrDefault(ym, List.of());
+            totals.add(MonthlyRentTotalsDto.builder()
+                    .rentMonth(ym.getMonthValue())
+                    .rentYear(ym.getYear())
+                    .rentPeriod(ym.format(PERIOD_FORMAT))
+                    .expectedRent(sum(rows, RentMonthStatusDto::getRentAmount))
+                    .collectedRent(sum(rows, RentMonthStatusDto::getPaidAmount))
+                    .pendingRent(sum(rows, RentMonthStatusDto::getPendingAmount))
+                    .renterCount(rows.size())
+                    .build());
+        }
+        return totals;
+    }
+
+    @Override
     public List<RenterPendingSummaryDto> getPendingRenters(YearMonth asOfRentMonth) {
         LedgerData data = loadLedgerData();
 
@@ -127,6 +157,7 @@ public class RentCalculationServiceImpl implements RentCalculationService {
                 .asOfRentMonth(asOfRentMonth.getMonthValue())
                 .asOfRentYear(asOfRentMonth.getYear())
                 .pendingMonths(pendingMonths)
+                .pendingMonthCount(pendingMonths.size())
                 .totalPending(sum(pendingMonths, RentMonthStatusDto::getPendingAmount))
                 .totalCredit(sum(ledger, RentMonthStatusDto::getCreditAmount))
                 .build();
