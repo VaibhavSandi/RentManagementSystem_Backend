@@ -15,7 +15,7 @@
 <artifactId>rent-management-api</artifactId>
 <version>0.0.1-SNAPSHOT</version>
 
-<packaging>war</packaging>
+<packaging>jar</packaging>
 
 <name>rent-management-api</name>
 
