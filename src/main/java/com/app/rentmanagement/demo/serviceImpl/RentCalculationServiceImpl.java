@@ -13,6 +13,7 @@ import com.app.rentmanagement.demo.repository.RenterRepository;
 import com.app.rentmanagement.demo.repository.SettlementRepository;
 import com.app.rentmanagement.demo.service.RentCalculationService;
 import com.app.rentmanagement.demo.util.CommonUtil;
+import com.app.rentmanagement.demo.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -208,7 +209,7 @@ public class RentCalculationServiceImpl implements RentCalculationService {
                 .rentMonth(ym.getMonthValue())
                 .rentYear(ym.getYear())
                 .rentPeriod(ym.format(PERIOD_FORMAT))
-                .dueDate(cycleStart(renter, ym).plusMonths(dueMonthOffset))
+                .dueDate(DateUtil.rentDueDate(renter.getJoiningDate(), ym, dueMonthOffset))
                 .rentAmount(rentAmount)
                 .paidAmount(paidAmount)
                 .pendingAmount(pendingAmount)

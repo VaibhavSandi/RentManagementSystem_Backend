@@ -32,3 +32,10 @@ CREATE TABLE IF NOT EXISTS rent_payment_email_log (
 
 -- To resend a month's reminder manually, delete its log rows, e.g.:
 --   DELETE FROM rent_payment_email_log WHERE notification_month = '2026-10';
+
+-- 4. Renter rent SMS reminders reuse rent_payment_email_log (no schema change):
+--    notification_type = 'RENTER_RENT_SMS', notification_month = the rent month (yyyy-MM),
+--    notification_key  = 'RENTER_RENT_SMS:<yyyy-MM>:<renter_id>', recipient = mobile number.
+--    The unique key allows at most one SMS per renter per rent month.
+--    To resend one renter's SMS for a month, delete its row, e.g.:
+--      DELETE FROM rent_payment_email_log WHERE notification_key = 'RENTER_RENT_SMS:2026-09:12';

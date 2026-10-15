@@ -6,9 +6,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * One row per monthly report. The unique notification_key (e.g. "OWNER_PENDING_RENT:2026-10")
- * stops the same report from being sent twice across restarts, repeated or manual runs,
- * and multiple application instances.
+ * One row per notification: the owner's monthly report ("OWNER_PENDING_RENT:2026-10") or one
+ * renter's rent SMS for one rent month ("RENTER_RENT_SMS:2026-09:12"). The unique
+ * notification_key stops the same notification from being sent twice across restarts,
+ * repeated or manual runs, and multiple application instances.
  */
 @Entity
 @Table(name = "rent_payment_email_log",
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 public class RentReminderLog {
 
     public static final String TYPE_OWNER_PENDING_RENT = "OWNER_PENDING_RENT";
+    public static final String TYPE_RENTER_RENT_SMS = "RENTER_RENT_SMS";
 
     public static final String STATUS_SENDING = "SENDING";
     public static final String STATUS_SENT = "SENT";
@@ -35,7 +37,7 @@ public class RentReminderLog {
     @Column(name = "notification_key", nullable = false, length = 100)
     private String notificationKey;
 
-    // yyyy-MM of the month the reminder belongs to
+    // yyyy-MM of the month the reminder belongs to (the rent month for renter SMS)
     @Column(name = "notification_month", nullable = false, length = 7)
     private String notificationMonth;
 
